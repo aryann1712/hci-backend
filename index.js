@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(cors());
 
 
-// connectDB();
+connectDB();
 
 // Setup routes
 app.use("/api/users", userRoutes);
