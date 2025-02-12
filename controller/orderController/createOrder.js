@@ -3,20 +3,20 @@ const { Order } = require("../../models");
 
 const createOrder = async (req, res, next) => {
   try {
-    // userId from authMiddleware (decoded from JWT)
     const userId = req.user.userId;
-    const { items, status } = req.body;
+    // If you want to "convert" a cart to an order, you might load that cart first.
+    // Or the request might come with items in the body, e.g. for "Enquiry".
+    const { items } = req.body;
 
     const orderId = `ORD-${shortid.generate()}`;
-
     const newOrder = await Order.create({
-      userId,          // from decoded token
+      userId,
       orderId,
-      items,           // e.g. an array of {product, quantity}
-      status: status || "Enquiry",
+      items,
+      status: "Enquiry" // or "Ordered" if you prefer
     });
 
-    // Possibly send email to user/admin here
+    // Send email notifications to user/admin (optional)
     // ...
 
     res.status(201).json({ success: true, data: newOrder });
