@@ -1,13 +1,16 @@
-const { Product } = require("../../models");
+// controllers/productController/createProduct.js
+const Product = require("../../models/productModel");
 
 const createProduct = async (req, res, next) => {
   try {
     const { name, category, description, image, price, sku } = req.body;
 
-    // Check SKU duplication
-    const existing = await Product.findOne({ where: { sku } });
-    if (existing) {
-      return res.status(400).json({ error: "SKU already exists." });
+    // Check if SKU is unique
+    if (sku) {
+      const existing = await Product.findOne({ sku });
+      if (existing) {
+        return res.status(400).json({ error: "SKU already exists." });
+      }
     }
 
     const product = await Product.create({
@@ -16,7 +19,7 @@ const createProduct = async (req, res, next) => {
       description,
       image,
       price,
-      sku
+      sku,
     });
 
     res.status(201).json({ success: true, data: product });

@@ -1,30 +1,21 @@
-// models/orderModel.js
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../config/db");
-const User = require("./userModel");
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const Order = sequelize.define(
-  "Order",
+const orderItemSchema = new Schema({
+  product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+  quantity: { type: Number, default: 1 },
+  price: { type: Number, default: 0 },
+  mappedProduct: { type: mongoose.Schema.Types.ObjectId, ref: "Product" }, // optional
+});
+
+const orderSchema = new Schema(
   {
-    orderId: {
-      type: DataTypes.STRING,
-      unique: true,
-    },
-    status: {
-      type: DataTypes.STRING,
-      defaultValue: "Enquiry",
-    },
-    // items can be in a separate table or a JSON field. 
-    // You might define an OrderItem model for a normalized design.
-    items: {
-      type: DataTypes.JSON, // or an association with OrderItems
-    },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    orderId: { type: String, unique: true }, // e.g. "ORD-xxx"
+    status: { type: String, default: "Enquiry" }, // "Enquiry", "Ordered", etc.
+    items: [orderItemSchema], // array of subdocs
   },
-  { tableName: "orders", timestamps: true }
+  { timestamps: true }
 );
 
-// Example association: an order belongs to a user
-Order.belongsTo(User, { foreignKey: "userId" });
-User.hasMany(Order, { foreignKey: "userId" });
-
-module.exports = Order;
+module.exports = mongoose.model("Order", orderSchema);

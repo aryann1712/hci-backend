@@ -7,14 +7,9 @@ const { protect, adminOnly } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-// Create an inquiry/order
 router.post("/", protect, createOrder);
-
-// Get a single order
-router.get("/:orderId", protect, getOrderById);
-
-// Admin routes
 router.get("/", protect, adminOnly, getAllOrders);
+router.get("/:orderId", protect, getOrderById);
 router.put("/:orderId", protect, adminOnly, updateOrderStatus);
 
 module.exports = router;

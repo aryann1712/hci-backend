@@ -1,17 +1,17 @@
-const { Order } = require("../../models");
+// controllers/orderController/getOrderById.js
+const Order = require("../../models/orderModel");
 
 const getOrderById = async (req, res, next) => {
   try {
-    const { orderId } = req.params;
-    // If only admin or the user who created it can view:
-    // check role or userId from token
-    const order = await Order.findOne({ where: { orderId } });
+    const { orderId } = req.params; // "ORD-xxxx"
+
+    const order = await Order.findOne({ orderId }).populate("items.product");
     if (!order) {
       return res.status(404).json({ error: "Order not found." });
     }
 
-    // Optional: only allow user or admin
-    if (req.user.role !== "admin" && req.user.userId !== order.userId) {
+    // Ensure the user is admin or the owner
+    if (req.user.role !== "admin" && req.user.userId !== order.user.toString()) {
       return res.status(403).json({ error: "Access denied." });
     }
 

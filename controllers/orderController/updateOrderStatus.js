@@ -1,24 +1,22 @@
-const { Order } = require("../../models");
+// controllers/orderController/updateOrderStatus.js
+const Order = require("../../models/orderModel");
 
 const updateOrderStatus = async (req, res, next) => {
   try {
-    // Admin route
     if (req.user.role !== "admin") {
-      return res.status(403).json({ error: "Access denied. Admin only." });
+      return res.status(403).json({ error: "Admin only" });
     }
 
     const { orderId } = req.params;
     const { status } = req.body;
 
-    const [rowsUpdated, [updatedOrder]] = await Order.update(
+    const updatedOrder = await Order.findOneAndUpdate(
+      { orderId },
       { status },
-      {
-        where: { orderId },
-        returning: true
-      }
-    );
+      { new: true }
+    ).populate("items.product");
 
-    if (!rowsUpdated) {
+    if (!updatedOrder) {
       return res.status(404).json({ error: "Order not found." });
     }
 

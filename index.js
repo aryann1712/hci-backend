@@ -1,14 +1,15 @@
 const express = require("express");
 const cors = require("cors");
+const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
 const dotenv = require("dotenv").config();
-const {connectDB} = require("./config/db")
 
 
 
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const cartRoutes = require("./routes/cartRoutes");
 
 
 
@@ -21,15 +22,16 @@ app.use(cors());
 
 connectDB();
 
-// Setup routes
+// routes
 app.use("/api/users", userRoutes);
-// app.use("/api/products", productRoutes);
-// app.use("/api/orders", orderRoutes);
-
+app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => {
-    res.json("www.google.com");
+    res.json({ message: "MongoDB E-commerce API is running..." });
 });
+
 
 
 
@@ -39,15 +41,15 @@ app.use(errorHandler);
 app.listen(port, () => {
     let date_ob = new Date();
     // current hours
-let hours = date_ob.getHours();
+    let hours = date_ob.getHours();
 
-// current minutes
-let minutes = date_ob.getMinutes();
+    // current minutes
+    let minutes = date_ob.getMinutes();
 
-// current seconds
-let seconds = date_ob.getSeconds();
-    
-console.log(`server is running in port ${port}// time  ->  ${hours} - ${minutes} - ${seconds}`);
+    // current seconds
+    let seconds = date_ob.getSeconds();
+
+    console.log(`server is running in port ${port}// time  ->  ${hours} - ${minutes} - ${seconds}`);
 });
 
 

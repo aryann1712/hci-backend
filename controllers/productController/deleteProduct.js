@@ -1,11 +1,11 @@
-const { Product } = require("../../models");
+// controllers/productController/deleteProduct.js
+const Product = require("../../models/productModel");
 
 const deleteProduct = async (req, res, next) => {
   try {
     const { productId } = req.params;
-
-    const rowsDeleted = await Product.destroy({ where: { id: productId } });
-    if (!rowsDeleted) {
+    const deleted = await Product.findByIdAndDelete(productId);
+    if (!deleted) {
       return res.status(404).json({ error: "Product not found." });
     }
 

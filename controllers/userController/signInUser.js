@@ -1,12 +1,13 @@
+// controllers/userController/signInUser.js
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("../../models/userModel");
+const User = require("../../models/userModel");
 
 const signInUser = async (req, res, next) => {
   try {
     const { phone, password } = req.body;
 
-    const user = await User.findOne({ where: { phone } });
+    const user = await User.findOne({ phone });
     if (!user) {
       return res.status(400).json({ error: "User not found." });
     }
@@ -18,7 +19,7 @@ const signInUser = async (req, res, next) => {
 
     // Create JWT
     const token = jwt.sign(
-      { userId: user.id, role: user.role },
+      { userId: user._id.toString(), role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );

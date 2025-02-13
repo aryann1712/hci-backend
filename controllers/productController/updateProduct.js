@@ -1,19 +1,18 @@
-const { Product } = require("../../models");
+// controllers/productController/updateProduct.js
+const Product = require("../../models/productModel");
 
 const updateProduct = async (req, res, next) => {
   try {
     const { productId } = req.params;
     const { name, category, description, image, price } = req.body;
 
-    const [rowsUpdated, [updatedProduct]] = await Product.update(
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
       { name, category, description, image, price },
-      {
-        where: { id: productId },
-        returning: true
-      }
+      { new: true }
     );
 
-    if (!rowsUpdated) {
+    if (!updatedProduct) {
       return res.status(404).json({ error: "Product not found." });
     }
 
