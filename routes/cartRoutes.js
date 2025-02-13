@@ -3,11 +3,13 @@ const addToCart = require("../controllers/cartController/addToCart");
 const getCart = require("../controllers/cartController/getCart");
 const removeFromCart = require("../controllers/cartController/removeFromCart");
 const { protect } = require("../middleware/authMiddleware");
+const { zodValidate } = require("../middleware/zodValidate");
+const { addToCartSchema, removeFromCartSchema } = require("../validators/cartValidators");
 
 const router = express.Router();
 
-router.post("/add", protect, addToCart);
+router.post("/add", protect, zodValidate(addToCartSchema), addToCart);
 router.get("/", protect, getCart);
-router.delete("/:productId", protect, removeFromCart);
+router.delete("/:productId", protect, zodValidate(removeFromCartSchema), removeFromCart);
 
 module.exports = router;
