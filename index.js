@@ -3,6 +3,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
 const dotenv = require("dotenv").config();
+const { swaggerUi, specs } = require("./config/swaggerConfig"); // Import Swagger config
 
 
 
@@ -27,6 +28,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.get("/", (req, res) => {
     res.json({ message: "MongoDB E-commerce API is running..." });
@@ -49,7 +51,7 @@ app.listen(port, () => {
     // current seconds
     let seconds = date_ob.getSeconds();
 
-    console.log(`server is running in port ${port}// time  ->  ${hours} - ${minutes} - ${seconds}`);
+    console.log(`server is running in port ${port}// time  ->  ${hours}:${minutes}:${seconds}`);
 });
 
 

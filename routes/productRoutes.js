@@ -7,6 +7,7 @@ const deleteProduct = require("../controllers/productController/deleteProduct");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 const { createProductSchema, updateProductSchema } = require("../validators/productValidators");
 const { zodValidate } = require("../middleware/zodValidate");
+const upload = require("../middleware/multer")
 
 const router = express.Router();
 
@@ -15,8 +16,11 @@ router.get("/", getAllProducts);
 router.get("/:productId", getProductById);
 
 // admin only
-router.post("/", protect, adminOnly, zodValidate(createProductSchema), createProduct);
-router.put("/:productId", protect, adminOnly,zodValidate(updateProductSchema), updateProduct);
-router.delete("/:productId", protect, adminOnly, deleteProduct);
+// router.post("/", protect, adminOnly, zodValidate(createProductSchema), createProduct);
+router.post("/", upload, createProduct);
+// router.put("/:productId", protect, adminOnly, zodValidate(updateProductSchema), updateProduct);
+router.put("/:productId", upload, updateProduct);
+// router.delete("/:productId", protect, adminOnly, deleteProduct);
+router.delete("/:productId", deleteProduct);
 
 module.exports = router;
