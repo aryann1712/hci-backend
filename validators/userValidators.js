@@ -28,3 +28,14 @@ export const updateUserProfileSchema = z.object({
   // If you allow updating password, you can include that too:
   password: z.string().min(6).optional(),
 });
+
+export const changePasswordSchema = z.object({
+  phone: z.string().min(10),
+  currentPassword: z.string().min(6, "Current password must be at least 6 characters"),
+  newPassword: z.string().min(6, "New password must be at least 6 characters"),
+});
+
+export const updateUserRoleSchema = z.object({
+  userId: z.string(),
+  role: z.enum(["admin", "user"]),
+});

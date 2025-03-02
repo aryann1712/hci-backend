@@ -17,10 +17,11 @@ router.get("/:productId", getProductById);
 
 // admin only
 // router.post("/", protect, adminOnly, zodValidate(createProductSchema), createProduct);
-router.post("/", upload, createProduct);
 // router.put("/:productId", protect, adminOnly, zodValidate(updateProductSchema), updateProduct);
-router.put("/:productId", upload, updateProduct);
 // router.delete("/:productId", protect, adminOnly, deleteProduct);
+
+router.post("/", upload, createProduct);
+router.put("/:productId", upload, updateProduct);
 router.delete("/:productId", deleteProduct);
 
 module.exports = router;

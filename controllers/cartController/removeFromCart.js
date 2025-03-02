@@ -3,7 +3,9 @@ const Cart = require("../../models/cartModel");
 
 const removeFromCart = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    // const userId = req.user.userId;
+    const userId = req.body.userId;
+
     const { productId } = req.params;
 
     let cart = await Cart.findOne({ user: userId });

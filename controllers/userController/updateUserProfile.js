@@ -3,7 +3,8 @@ const User = require("../../models/userModel");
 
 const updateUserProfile = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    // const userId = req.user.userId;
+    const userId = req.params.id;
     const { gstNumber, companyName, address } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(

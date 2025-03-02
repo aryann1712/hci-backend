@@ -4,7 +4,8 @@ const Product = require("../../models/productModel");
 
 const addToCart = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    // const userId = req.user.userId;
+    const userId = req.body.user;
     const { productId, quantity, price } = req.body;
 
     let cart = await Cart.findOne({ user: userId });
@@ -21,7 +22,11 @@ const addToCart = async (req, res, next) => {
     // See if item is already in cart
     const existingItem = cart.items.find((item) => item.product.toString() === productId);
     if (existingItem) {
-      existingItem.quantity += quantity || 1;
+      if (quantity > 1 && quantity) {
+        existingItem.quantity = quantity;
+      } else {
+        existingItem.quantity += quantity || 1;
+      }
       existingItem.price = price ?? product.price ?? 0; // or keep old price
     } else {
       cart.items.push({
