@@ -5,9 +5,9 @@ const User = require("../../models/userModel");
 
 const signInUser = async (req, res, next) => {
   try {
-    const { phone, password } = req.body;
+    const { email, password } = req.body;
 
-    const user = await User.findOne({ phone });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ error: "User not found." });
     }

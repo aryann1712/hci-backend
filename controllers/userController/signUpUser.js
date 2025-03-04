@@ -16,8 +16,8 @@ const signUpUser = async (req, res, next) => {
       return res.status(400).json({ error: "User already exists." });
     }
 
-    // const password = generatePassword();
-    const password = "password";
+    const password = generatePassword();
+    // const password = "password";
     const passwordHash = await bcrypt.hash(password, 10);
 
     // Create user
