@@ -4,9 +4,11 @@ const signUpUser = require("../controllers/userController/signUpUser");
 const getUserProfile = require("../controllers/userController/getUserProfile");
 const updateUserProfile = require("../controllers/userController/updateUserProfile");
 const changePassword = require("../controllers/userController/changePassword");
+const forgotPassword = require("../controllers/userController/forgotPassword");
 const { protect } = require("../middleware/authMiddleware");
 const { zodValidate } = require("../middleware/zodValidate");
-const { signUpSchema, signInSchema, updateUserProfileSchema, changePasswordSchema } = require("../validators/userValidators");
+const { signUpSchema, signInSchema, updateUserProfileSchema,
+    changePasswordSchema, forgotPasswordSchema } = require("../validators/userValidators");
 
 const router = express.Router();
 
@@ -21,7 +23,8 @@ router.get("/profile/:id", getUserProfile);
 router.put("/profile/:id", updateUserProfile);
 
 // router.put("/cp", protect, zodValidate(changePasswordSchema), changePassword);
-router.put("/cp", zodValidate(changePasswordSchema), changePassword);
-// router.put("/cp", changePassword);
+router.put("/cp", changePassword);
+// router.put("/fp", protect, zodValidate(forgotPasswordSchema), changePassword);
+router.put("/fp", forgotPassword);
 
 module.exports = router;

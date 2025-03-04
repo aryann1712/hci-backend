@@ -7,9 +7,9 @@ const createProduct = async (req, res, next) => {
   session.startTransaction();
   try {
     const { name, category, description, price, sku } = req.body;
-    const imageData = req.file;
-    const contentType = imageData.mimetype;
-    const fileExtention = contentType.split('/')[1];
+    const imagesData = req.files;
+    console.log(imagesData)
+    const images = [];
 
     // Check if SKU is unique
     if (sku) {
@@ -20,12 +20,17 @@ const createProduct = async (req, res, next) => {
         return res.status(400).json({ error: "SKU already exists." });
       }
     }
-    // If an image is provided, upload it to S3
-    if (imageData) {
+
+    // Iterate over each image and upload it to S3
+    for (const imageData of imagesData) {
+      const contentType = imageData.mimetype;
+      const fileExtention = contentType.split('/')[1];
+
       const fileName = `product-${Date.now()}.${fileExtention}`;
       try {
-        const imagePath = await putObject(fileName, contentType, req.file.buffer);
-        image = imagePath;
+        const imagePath = await putObject(fileName, contentType, imageData.buffer);
+        images.push(imagePath);
+        console.log(`Image uploaded to S3: ${imagePath}`);
       } catch (error) {
         await session.abortTransaction();
         session.endSession();
@@ -40,7 +45,7 @@ const createProduct = async (req, res, next) => {
           name,
           category,
           description,
-          image,
+          images,
           price,
           sku,
         },

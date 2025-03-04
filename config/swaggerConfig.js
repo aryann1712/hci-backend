@@ -1,5 +1,6 @@
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const fs = require('fs');
 
 // Swagger definition
 const options = {
@@ -22,4 +23,8 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 
-module.exports = { swaggerUi, specs };
+// Load the generated Swagger JSON file
+const swaggerDocument = JSON.parse(fs.readFileSync('./swagger-output.json', 'utf8'));
+
+
+module.exports = { swaggerUi, specs, swaggerDocument };
