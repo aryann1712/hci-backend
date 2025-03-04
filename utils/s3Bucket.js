@@ -28,7 +28,7 @@ async function putObject(fileName, contentType, body) {
         Body: body,
         ContentType: contentType
     });
-    console.log(key)
+    console.log(`Image uploaded to S3: ${key}`)
     await s3Client.send(command);
     // const url = await getSignedUrl(s3Client, command);
     // return url;
