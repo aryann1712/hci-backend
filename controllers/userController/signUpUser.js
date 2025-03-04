@@ -8,7 +8,7 @@ const signUpUser = async (req, res, next) => {
   const session = await User.startSession();
   session.startTransaction();
   try {
-    const { phone, email, gstNumber, companyName, address } = req.body;
+    const { name, phone, email, gstNumber, companyName, address } = req.body;
 
     // Check if user exists
     const existing = await User.findOne({ phone });
@@ -22,6 +22,7 @@ const signUpUser = async (req, res, next) => {
 
     // Create user
     const newUser = await User.create([{
+      name,
       phone,
       email,
       passwordHash,

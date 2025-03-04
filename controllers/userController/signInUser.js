@@ -21,11 +21,15 @@ const signInUser = async (req, res, next) => {
     const token = jwt.sign(
       { userId: user._id.toString(), role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "2h" }
     );
 
     res.status(200).json({
       success: true,
+      email,
+      id: user._id,
+      phone : user.phone,
+      name: user.name,
+      role: user.role,
       token,
       message: "Sign in successful.",
     });
