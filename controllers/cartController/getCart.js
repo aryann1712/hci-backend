@@ -24,7 +24,19 @@ const getCart = async (req, res, next) => {
 
     const resolvedProducts = await Promise.all(updatedProducts);
 
-    res.status(200).json({ success: true, data: cart });
+    const resProductData = cart.items.map((item, index) => {
+      return {
+        _id: item.product._id,
+        sku: item.product.sku,
+        images: item.product.images,
+        name: item.product.name,
+        category: item.product.category,
+        description: item.product.description,
+        quantity: cart.items[index].quantity,
+      };
+    });
+
+    res.status(200).json({ success: true, data: resProductData });
   } catch (error) {
     next(error);
   }

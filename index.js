@@ -12,7 +12,7 @@ const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
-const enquiryRoutes = require("./routes/enquiryRoutes");
+// const enquiryRoutes = require("./routes/enquiryRoutes");
 
 
 
@@ -31,7 +31,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/employees", employeeRoutes);
-app.use("/api/enquiry", enquiryRoutes);
+// app.use("/api/enquiry", enquiryRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/", (req, res) => {
