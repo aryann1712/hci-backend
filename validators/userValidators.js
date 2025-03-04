@@ -30,9 +30,13 @@ export const updateUserProfileSchema = z.object({
 });
 
 export const changePasswordSchema = z.object({
-  phone: z.string().min(10),
+  email: z.string().min(8),
   currentPassword: z.string().min(6, "Current password must be at least 6 characters"),
   newPassword: z.string().min(6, "New password must be at least 6 characters"),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().min(8),
 });
 
 export const updateUserRoleSchema = z.object({

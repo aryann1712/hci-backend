@@ -5,10 +5,12 @@ const changePassword = async (req, res, next) => {
     try {
         // const userId = req.user.userId;
         // const { phone, oldPassword, newPassword } = req.body;
-        const { userId, phone, currentPassword, newPassword } = req.body;
+        const { userId, email, currentPassword, newPassword } = req.body;
 
         // Check if user exists
-        const user = await User.findOne({ _id: userId, phone });
+        console.log(userId, email)
+        console.log(req.body)
+        const user = await User.findOne({ _id: userId, email });
         if (!user) {
             return res.status(404).json({ error: "User not found." });
         }

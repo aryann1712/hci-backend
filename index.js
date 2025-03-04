@@ -3,7 +3,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
 const dotenv = require("dotenv").config();
-const { swaggerUi, specs } = require("./config/swaggerConfig"); // Import Swagger config
+const { swaggerUi, specs, swaggerDocument } = require("./config/swaggerConfig"); // Import Swagger config
 
 
 
@@ -11,7 +11,8 @@ const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
-const employeeRoutes = require("./routes//employeeRoutes");
+const employeeRoutes = require("./routes/employeeRoutes");
+const enquiryRoutes = require("./routes/enquiryRoutes");
 
 
 
@@ -30,7 +31,8 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/employees", employeeRoutes);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/api/enquiry", enquiryRoutes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/", (req, res) => {
     res.json({ message: "MongoDB E-commerce API is running..." });

@@ -14,13 +14,17 @@ function checkFileType(file, cb) {
   }
 }
 
-// Init upload
+// // Init upload
+// const upload = multer({
+//   storage: memoryStorage,
+//   // limits: { fileSize: 1000000 },
+//   // fileFilter: function (req, file, cb) {
+//   //   checkFileType(file, cb);
+//   // }
+// }).single('image');
+
 const upload = multer({
-  storage: memoryStorage,
-  // limits: { fileSize: 1000000 },
-  // fileFilter: function (req, file, cb) {
-  //   checkFileType(file, cb);
-  // }
-}).single('image');
+  storage: multer.memoryStorage()
+}).array('image', 10);
 
 module.exports = upload;
