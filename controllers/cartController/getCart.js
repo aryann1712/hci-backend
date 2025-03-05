@@ -11,7 +11,7 @@ const getCart = async (req, res, next) => {
     const cart = await Cart.findOne({ user: userId }).populate("items.product");
 
     if (!cart) {
-      return res.status(200).json({ success: true, data: { items: [] } });
+      return res.status(200).json({ success: true, data: [] });
     }
 
     const updatedProducts = cart.items.map(async (item) => {
