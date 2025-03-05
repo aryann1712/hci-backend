@@ -16,8 +16,8 @@ const updateOrderStatus = async (req, res, next) => {
       { new: true }
     ).populate("items.product");
 
-    if (!updatedOrder) {
-      return res.status(404).json({ error: "Order not found." });
+    if (updatedOrder.length < 1) {
+      return res.status(404).json({ error: "Order updation failed." });
     }
 
     res.status(200).json({ success: true, data: updatedOrder });
