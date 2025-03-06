@@ -1,5 +1,7 @@
 const Order = require("../../models/orderModel");
 const sendEmail = require("../../utils/nodeMailer")
+const Cart = require("../../models/cartModel");
+
 
 const createOrder = async (req, res, next) => {
   const session = await Order.startSession();
@@ -22,6 +24,11 @@ const createOrder = async (req, res, next) => {
         price: i.price || 0,
       })),
     }], { session });
+
+
+    //now delete the cart with 
+    await Cart.deleteMany({ user: userId }, { session });
+
 
     if (!newOrder) {
       return res.status(500).json({ error: "Failed to create Order" });

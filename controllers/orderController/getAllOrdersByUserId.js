@@ -14,11 +14,14 @@ const getAllOrdersByUserId = async (req, res, next) => {
 
         const orders = await Order.find({ user: id })
             .sort({ createdAt: -1 })
-            .populate("user", "phone email")  // populate user
+            .populate({ 
+                path: "user",
+                select: "-passwordHash"
+            })  // populate user
             .populate("items.product");       // populate product
 
         if (orders.length < 1) {
-            return res.status(404).json({ error: "No orders found." });
+            return res.status(200).json([]);
         }
 
         // Update each product's image URL with S3 URL
