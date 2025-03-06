@@ -2,14 +2,17 @@ const Order = require("../../models/orderModel");
 const sendEmail = require("../../utils/nodeMailer")
 
 const createOrder = async (req, res, next) => {
+  const session = await Order.startSession();
+  session.startTransaction();
   try {
     const { nanoid } = await import('nanoid'); // Dynamic Import
-    const userId = req.user.userId;
+    // const userId = req.user.userId;
+    const userId = req.body.user;
     const { items, status } = req.body;
 
     const orderId = `ORD-${nanoid()}`;
 
-    const newOrder = await Order.create({
+    const newOrder = await Order.create([{
       user: userId,
       orderId,
       status: status || "Enquiry",
@@ -18,7 +21,11 @@ const createOrder = async (req, res, next) => {
         quantity: i.quantity || 1,
         price: i.price || 0,
       })),
-    });
+    }], { session });
+
+    if (!newOrder) {
+      return res.status(500).json({ error: "Failed to create Order" });
+    }
 
     // // Send email with credentials
     // try {
@@ -43,8 +50,13 @@ const createOrder = async (req, res, next) => {
     //   return res.status(500).json({ error: "Failed to send email" });
     // }
 
+    await session.commitTransaction();
+    session.endSession();
+
     res.status(201).json({ success: true, data: newOrder });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     next(error);
   }
 };

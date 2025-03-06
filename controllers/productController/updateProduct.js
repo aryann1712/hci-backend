@@ -8,20 +8,30 @@ const updateProduct = async (req, res, next) => {
   try {
     const { productId } = req.params;
     const { name, category, description, price } = req.body;
-    const imageData = req.file;
-    const contentType = imageData.mimetype;
-    const fileExtention = contentType.split('/')[1];
+    const imagesData = req.files;
+    const images = []
 
     const product = await Product.findById(productId);
 
     if (product) {
-      // If an image is provided, upload it to S3
-      if (imageData) {
+
+      // Delete old images from S3
+      if (product.images && product.images.length > 0) {
+        for (const oldImage of product.images) {
+          console.log("Removing old image:", oldImage)
+          await deleteObject(oldImage);
+        }
+      }
+
+      // Upload new images to S3
+      for (const imageData of imagesData) {
+        const contentType = imageData.mimetype;
+        const fileExtention = contentType.split('/')[1];
+
         const fileName = `product-${Date.now()}.${fileExtention}`;
         try {
-          await deleteObject(product.image)
-          const imagePath = await putObject(fileName, contentType, req.file.buffer);
-          image = imagePath;
+          const imagePath = await putObject(fileName, contentType, imageData.buffer);
+          images.push(imagePath);
         } catch (error) {
           await session.abortTransaction();
           session.endSession();
@@ -33,7 +43,7 @@ const updateProduct = async (req, res, next) => {
       // const product = await Product.findById(productId);
       const updatedProduct = await Product.findByIdAndUpdate(
         productId,
-        { name, category, description, image, price },
+        { name, category, description, images, price },
         { new: true },
         { session }
       );
