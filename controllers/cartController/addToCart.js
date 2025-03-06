@@ -25,7 +25,7 @@ const addToCart = async (req, res, next) => {
       if (quantity > 1 && quantity) {
         existingItem.quantity = quantity;
       } else {
-        existingItem.quantity += quantity || 1;
+        existingItem.quantity = quantity || 1;
       }
       existingItem.price = price ?? product.price ?? 0; // or keep old price
     } else {
