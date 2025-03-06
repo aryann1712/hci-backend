@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/", createEnquiry);
 router.get("/", getAllEnquiry);
 router.get("/between", getAllEnquiryBetweenDates);
-router.get("/:id", getEnquiryByUserId);
+router.get("/userid/:id", getEnquiryByUserId);
 // router.post("/signin", zodValidate(signInSchema), signInUser);
 // // router.post("/signup", signUpUser);
 // // router.post("/signin", signInUser);

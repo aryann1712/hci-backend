@@ -3,6 +3,8 @@ const { Schema } = mongoose;
 
 const enquiryItemSchema = new Schema({
     product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    quantity: { type: Number, default: 1 },
+    price: { type: Number, default: 0 },
     mappedProduct: { type: mongoose.Schema.Types.ObjectId, ref: "Product" }, // optional
 });
 

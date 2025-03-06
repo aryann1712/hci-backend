@@ -26,13 +26,16 @@ const createOrder = async (req, res, next) => {
     }], { session });
 
 
-    //now delete the cart with 
-    await Cart.deleteMany({ user: userId }, { session });
-
 
     if (!newOrder) {
       return res.status(500).json({ error: "Failed to create Order" });
     }
+
+
+
+    //now delete the cart with 
+    await Cart.deleteMany({ user: userId }, { session });
+
 
     // // Send email with credentials
     // try {

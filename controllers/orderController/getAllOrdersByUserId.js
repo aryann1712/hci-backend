@@ -21,7 +21,7 @@ const getAllOrdersByUserId = async (req, res, next) => {
             .populate("items.product");       // populate product
 
         if (orders.length < 1) {
-            return res.status(200).json([]);
+            return res.status(200).json({ success: true, data: [] });
         }
 
         // Update each product's image URL with S3 URL

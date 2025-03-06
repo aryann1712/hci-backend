@@ -1,6 +1,5 @@
 // controllers/orderController/getOrderById.js
 const Enquiry = require("../../models/enquiryModel");
-const mongoose = require("mongoose");
 const { getObjectURL } = require("../../utils/s3Bucket");
 
 
@@ -16,10 +15,14 @@ const getEnquiryByUserId = async (req, res, next) => {
 
     const enquiries = await Enquiry.find({ user: id })
       .sort({ createdAt: -1 })
-      .populate("user", "phone email")  // populate user
+      .populate({
+        path: "user",
+        select: "-passwordHash"
+      })  // populate user
       .populate("items.product");       // populate product
+
     if (enquiries.length < 1) {
-      return res.status(404).json({ error: "No enquiry found." });
+      return res.status(200).json({ success: true, data: [] });
     }
 
     // Update each product's image URL with S3 URL
