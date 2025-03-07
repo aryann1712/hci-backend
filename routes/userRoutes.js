@@ -9,6 +9,7 @@ const { protect } = require("../middleware/authMiddleware");
 const { zodValidate } = require("../middleware/zodValidate");
 const { signUpSchema, signInSchema, updateUserProfileSchema,
     changePasswordSchema, forgotPasswordSchema } = require("../validators/userValidators");
+const getGSTInfo = require("../controllers/userController/getGstInfo");
 
 const router = express.Router();
 
@@ -26,5 +27,8 @@ router.put("/profile/:id", updateUserProfile);
 router.put("/cp", changePassword);
 // router.put("/fp", protect, zodValidate(forgotPasswordSchema), changePassword);
 router.put("/fp", forgotPassword);
+
+router.get("/getGSTinfo/:gstNumber", getGSTInfo)
+
 
 module.exports = router;
