@@ -5,17 +5,21 @@ const { getObjectURL } = require("../../utils/s3Bucket");
 const getAllOrders = async (req, res, next) => {
   try {
     // // confirm admin
-    // if (req.user.role !== "admin") {
-    //   return res.status(403).json({ error: "Admin only" });
-    // }
+    if (req.user.role == "admin" || req.user.role == "manager") {
+    } else {
+      return res.status(403).json({ error: "Admin or Manager only" });
+    }
 
     const orders = await Order.find({})
       .sort({ createdAt: -1 })
-      .populate("user", "phone email")  // populate user
+      .populate({
+        path: "user",
+        select: "-passwordHash"
+      })  // populate user
       .populate("items.product");       // populate product
 
     if (orders.length < 1) {
-      return res.status(404).json({ error: "No orders found." });
+      return res.status(200).json({ success: true, data: [] });
     }
 
 
@@ -33,7 +37,8 @@ const getAllOrders = async (req, res, next) => {
       return { ...order.toObject(), items: updatedItems };
     }));
 
-    res.status(200).json({ success: true, data: updatedOrders });
+    // res.status(200).json({ success: true, data: updatedOrders });
+    res.status(200).json({ success: true, data: [updatedOrders] });
   } catch (error) {
     next(error);
   }

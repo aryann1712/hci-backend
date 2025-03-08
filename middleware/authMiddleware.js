@@ -28,4 +28,12 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
-module.exports = { protect, adminOnly };
+const adminManagerOnly = (req, res, next) => {
+  if (req.user.role == "admin" || req.user.role == "manager") {
+    next();
+  } else {
+    return res.status(403).json({ error: "Admin or Manager only" });
+  }
+};
+
+module.exports = { protect, adminOnly, adminManagerOnly };

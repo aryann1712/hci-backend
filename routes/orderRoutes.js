@@ -4,7 +4,7 @@ const getOrderById = require("../controllers/orderController/getOrderById");
 const getAllOrders = require("../controllers/orderController/getAllOrders");
 const getAllOrdersByUserId = require("../controllers/orderController/getAllOrdersByUserId");
 const updateOrderStatus = require("../controllers/orderController/updateOrderStatus");
-const { protect, adminOnly } = require("../middleware/authMiddleware");
+const { protect, adminOnly, adminManagerOnly } = require("../middleware/authMiddleware");
 const { zodValidate } = require("../middleware/zodValidate");
 const { createOrderSchema } = require("../validators/orderValidators");
 
@@ -16,7 +16,7 @@ const router = express.Router();
 // router.put("/:orderId", protect, adminOnly, updateOrderStatus);
 
 router.post("/", createOrder);
-router.get("/", getAllOrders);
+router.get("/", protect, adminManagerOnly, getAllOrders);
 router.get("/:orderId", getOrderById);
 router.put("/:orderId", updateOrderStatus);
 router.get("/userid/:id", getAllOrdersByUserId);
