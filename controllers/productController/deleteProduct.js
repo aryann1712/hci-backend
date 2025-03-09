@@ -28,10 +28,7 @@ const deleteProduct = async (req, res, next) => {
       await session.abortTransaction();
       session.endSession();
       return res.status(404).json({ error: "Product not found." });
-    } else {
-      console.log(deleted.image);
-      deleteObject(deleted.image)
-    }
+    } 
 
     console.log(deleted);
 

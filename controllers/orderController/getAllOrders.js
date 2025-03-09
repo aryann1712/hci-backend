@@ -4,7 +4,7 @@ const { getObjectURL } = require("../../utils/s3Bucket");
 
 const getAllOrders = async (req, res, next) => {
   try {
-    // // confirm admin
+    // confirm admin
     if (req.user.role == "admin" || req.user.role == "manager") {
     } else {
       return res.status(403).json({ error: "Admin or Manager only" });
@@ -15,13 +15,12 @@ const getAllOrders = async (req, res, next) => {
       .populate({
         path: "user",
         select: "-passwordHash"
-      })  // populate user
-      .populate("items.product");       // populate product
+      }) // populate user
+      .populate("items.product"); // populate product
 
     if (orders.length < 1) {
       return res.status(200).json({ success: true, data: [] });
     }
-
 
     // Update each product's image URL with S3 URL
     const updatedOrders = await Promise.all(orders.map(async order => {
@@ -33,12 +32,12 @@ const getAllOrders = async (req, res, next) => {
         }
         return item;
       }));
-
       return { ...order.toObject(), items: updatedItems };
     }));
 
-    // res.status(200).json({ success: true, data: updatedOrders });
-    res.status(200).json({ success: true, data: [updatedOrders] });
+    console.log('sending all orders admin');
+    // Remove the extra array wrapping
+    res.status(200).json({ success: true, data: updatedOrders });
   } catch (error) {
     next(error);
   }
