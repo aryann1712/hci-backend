@@ -4,23 +4,23 @@ const UserRole = require("../../enums/role")
 
 const updateEmployeeRole = async (req, res, next) => {
   try {
-    const loggedInUserId = req.user.userId;
-    const userIdToUpdate = req.params.id;
-    const { role } = req.body;
+  
+    const { role, adminId, updateId } = req.body;
 
     // Check if the logged-in user has admin role
-    const loggedInUser = await User.findById(loggedInUserId);
-    if (loggedInUser.role !== UserRole.ADMIN) {
+    const loggedInUser = await User.findById(adminId);
+    if (loggedInUser.role !== "admin") {
       return res.status(403).json({ error: "Unauthorized to update user role." });
     }
 
     // Validate the role
-    if (!Object.values(UserRole).includes(role)) {
+    if (role == "admin") {
       return res.status(400).json({ error: "Invalid role." });
     }
 
+
     const updatedUser = await User.findByIdAndUpdate(
-      userIdToUpdate,
+      updateId,
       { role },
       { new: true }
     ).select("-passwordHash");

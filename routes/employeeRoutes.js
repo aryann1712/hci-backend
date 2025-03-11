@@ -11,6 +11,6 @@ const router = express.Router();
 // router.put("/role/:id", protect, zodValidate(updateUserRoleSchema), updateEmployeeRole);
 
 router.get("/:id", getEmployees);
-router.put("/role/:id", updateEmployeeRole);
+router.put("/role", updateEmployeeRole);
 
 module.exports = router;
