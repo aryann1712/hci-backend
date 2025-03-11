@@ -12,7 +12,10 @@ const getAllEnquiry = async (req, res, next) => {
 
         const enquiries = await Enquiry.find({})
             .sort({ createdAt: -1 })
-            .populate("user", "phone email")  // populate user
+            .populate({
+                path: "user",
+                select: "-passwordHash"
+              })  // populate user
             .populate("items.product");       // populate product
 
         if (enquiries.length < 1) {
