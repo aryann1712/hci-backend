@@ -30,7 +30,6 @@ const createProduct = async (req, res, next) => {
       try {
         const imagePath = await putObject(fileName, contentType, imageData.buffer);
         images.push(imagePath);
-        console.log(`Image uploaded to S3: ${imagePath}`);
       } catch (error) {
         await session.abortTransaction();
         session.endSession();

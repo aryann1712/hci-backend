@@ -1,6 +1,6 @@
 // controllers/productController/getProductById.js
 const Product = require("../../models/productModel");
-const { getObjectURL } = require("../../utils/s3Bucket");
+const { getObjectPublicURL } = require("../../utils/s3Bucket");
 
 const getProductById = async (req, res, next) => {
   try {
@@ -12,13 +12,13 @@ const getProductById = async (req, res, next) => {
 
     if (product.images && product.images.length > 0) {
       const imagePromises = product.images.map(async (image) => {
-        const objectURL = await getObjectURL(image);
+        const objectURL = await getObjectPublicURL(image);
         return objectURL;
       });
       const resolvedImagePromises = await Promise.all(imagePromises);
       product.images = resolvedImagePromises;
     } else {
-      const objectURL = await getObjectURL(product.image);
+      const objectURL = await getObjectPublicURL(product.image);
       product.images = objectURL;
     }
 

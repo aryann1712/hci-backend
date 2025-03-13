@@ -1,7 +1,7 @@
 // controllers/orderController/getOrderById.js
 const Enquiry = require("../../models/enquiryModel");
 const mongoose = require("mongoose");
-const { getObjectURL } = require("../../utils/s3Bucket");
+const { getObjectPublicURL } = require("../../utils/s3Bucket");
 
 
 
@@ -27,7 +27,7 @@ const getEnquiryByUserId = async (req, res, next) => {
       const updatedItems = await Promise.all(enquiry.items.map(async item => {
         if (item.product.images && item.product.images.length > 0) {
           item.product.images = await Promise.all(item.product.images.map(async image => {
-            return await getObjectURL(image);
+            return await getObjectPublicURL(image);
           }));
         }
         return item;
