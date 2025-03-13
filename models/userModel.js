@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     address: { type: String },
     companyName: { type: String },
     role: { type: String, default: "user" }, // "admin" or "user"
+    status: {type: Boolean, default: true}
   },
   { timestamps: true }
 );

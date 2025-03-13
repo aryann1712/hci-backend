@@ -17,6 +17,10 @@ const signInUser = async (req, res, next) => {
       return res.status(401).json({ error: "Invalid credentials." });
     }
 
+    if(!user.status) {
+      return res.status(401).json({ error: "Status not Active. Contact Owner" });
+    } 
+
     // Create JWT
     const token = jwt.sign(
       { userId: user._id.toString(), role: user.role },
