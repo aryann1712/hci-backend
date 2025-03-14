@@ -7,9 +7,22 @@ const updateProduct = async (req, res, next) => {
   session.startTransaction();
   try {
     const { productId } = req.params;
-    const { name, category, description, price } = req.body;
+    const { name, categories, description, price } = req.body;
     const imagesData = req.files;
     const images = []
+
+    // Check if categories is an array, if not, convert single value to array when provided
+    let categoriesArray;
+    if (categories) {
+      categoriesArray = Array.isArray(categories) ? categories : [categories];
+
+      // Validate categories if provided
+      if (categoriesArray.length === 0) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(400).json({ error: "If categories are provided, at least one category is required." });
+      }
+    }
 
     const product = await Product.findById(productId);
 
@@ -40,10 +53,17 @@ const updateProduct = async (req, res, next) => {
         }
       }
 
-      // const product = await Product.findById(productId);
+      // Prepare update object with only provided fields
+      const updateFields = {};
+      if (name) updateFields.name = name;
+      if (categoriesArray) updateFields.categories = categoriesArray;
+      if (description) updateFields.description = description;
+      if (images.length > 0) updateFields.images = images;
+      if (price) updateFields.price = price;
+
       const updatedProduct = await Product.findByIdAndUpdate(
         productId,
-        { name, category, description, images, price },
+        updateFields,
         { new: true },
         { session }
       );

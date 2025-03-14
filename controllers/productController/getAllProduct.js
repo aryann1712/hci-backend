@@ -9,7 +9,8 @@ const getAllProducts = async (req, res, next) => {
     const query = {};
 
     if (category) {
-      query.category = category;
+      // Find products that have the specified category in their categories array
+      query.categories = category;
     }
     if (search) {
       // simple "contains" match on name
