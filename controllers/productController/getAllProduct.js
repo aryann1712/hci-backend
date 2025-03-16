@@ -1,6 +1,6 @@
 // controllers/productController/getAllProducts.js
 const Product = require("../../models/productModel");
-const { getObjectURL } = require("../../utils/s3Bucket");
+const { getObjectPublicURL } = require("../../utils/s3Bucket");
 
 
 const getAllProducts = async (req, res, next) => {
@@ -9,7 +9,8 @@ const getAllProducts = async (req, res, next) => {
     const query = {};
 
     if (category) {
-      query.category = category;
+      // Find products that have the specified category in their categories array
+      query.categories = category;
     }
     if (search) {
       // simple "contains" match on name
@@ -38,7 +39,7 @@ const getAllProducts = async (req, res, next) => {
     for (let product of products) {
       if (product.images && product.images.length > 0) {
         const imagePromises = product.images.map(async (image) => {
-          const objectURL = await getObjectURL(image);
+          const objectURL = await getObjectPublicURL(image);
           return objectURL;
         });
         const resolvedImagePromises = await Promise.all(imagePromises);

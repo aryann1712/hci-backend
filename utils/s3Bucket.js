@@ -3,20 +3,25 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const bucket = process.env.AWS_BUCKET_NAME;
 
 const s3Client = new S3Client({
-    region: "us-east-1",
+    region: process.env.AWS_S3_REGION,
     credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
     },
 });
 
-async function getObjectURL(key) {
+async function getObjectSignedURL(key) {
     const command = new GetObjectCommand({
         Bucket: bucket,
         Key: key,
     });
     const url = await getSignedUrl(s3Client, command);
     // const url = await getSignedUrl(s3Client, command, {expiresIn: 3600,});
+    return url;
+}
+
+async function getObjectPublicURL(path) {
+    const url = `https://${bucket}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${path}`;
     return url;
 }
 
@@ -28,8 +33,8 @@ async function putObject(fileName, contentType, body) {
         Body: body,
         ContentType: contentType
     });
-    console.log(`Image uploaded to S3: ${key}`)
     await s3Client.send(command);
+    console.log(`Image uploaded to S3: ${key}`)
     // const url = await getSignedUrl(s3Client, command);
     // return url;
     return key;
@@ -53,4 +58,4 @@ async function listObjects() {
     // return result;
 }
 
-module.exports = { getObjectURL, putObject, deleteObject, listObjects };
+module.exports = { getObjectSignedURL, getObjectPublicURL, putObject, deleteObject, listObjects };

@@ -6,10 +6,20 @@ const createProduct = async (req, res, next) => {
   const session = await Product.startSession();
   session.startTransaction();
   try {
-    const { name, category, description, price, sku } = req.body;
+    const { name, categories, description, price, sku } = req.body;
     const imagesData = req.files;
     console.log(imagesData)
     const images = [];
+
+    // Check if categories is an array, if not, convert single value to array
+    const categoriesArray = Array.isArray(categories) ? categories : categories ? [categories] : [];
+
+    // Validate categories
+    if (categoriesArray.length === 0) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(400).json({ error: "At least one category is required." });
+    }
 
     // Check if SKU is unique
     if (sku) {
@@ -30,7 +40,6 @@ const createProduct = async (req, res, next) => {
       try {
         const imagePath = await putObject(fileName, contentType, imageData.buffer);
         images.push(imagePath);
-        console.log(`Image uploaded to S3: ${imagePath}`);
       } catch (error) {
         await session.abortTransaction();
         session.endSession();
@@ -43,7 +52,7 @@ const createProduct = async (req, res, next) => {
       [
         {
           name,
-          category,
+          categories: categoriesArray,
           description,
           images,
           price,

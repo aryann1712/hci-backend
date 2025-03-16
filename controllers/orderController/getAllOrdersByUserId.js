@@ -1,6 +1,6 @@
 // controllers/orderController/getAllOrders.js
 const Order = require("../../models/orderModel");
-const { getObjectURL } = require("../../utils/s3Bucket");
+const { getObjectPublicURL } = require("../../utils/s3Bucket");
 
 const getAllOrdersByUserId = async (req, res, next) => {
     try {
@@ -29,7 +29,7 @@ const getAllOrdersByUserId = async (req, res, next) => {
             const updatedItems = await Promise.all(order.items.map(async item => {
                 if (item.product.images && item.product.images.length > 0) {
                     item.product.images = await Promise.all(item.product.images.map(async image => {
-                        return await getObjectURL(image);
+                        return await getObjectPublicURL(image);
                     }));
                 }
                 return item;
