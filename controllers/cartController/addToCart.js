@@ -10,7 +10,7 @@ const addToCart = async (req, res, next) => {
 
     let cart = await Cart.findOne({ user: userId });
     if (!cart) {
-      cart = await Cart.create({ user: userId, items: [] });
+      cart = await Cart.create({ user: userId, items: [], customItems: [] });
     }
 
     // Check if product exists

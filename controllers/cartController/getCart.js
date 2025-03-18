@@ -1,7 +1,7 @@
 // controllers/cartController/getCart.js
 const Cart = require("../../models/cartModel");
 const Product = require("../../models/productModel");
-const { getObjectURL } = require("../../utils/s3Bucket");
+const { getObjectPublicURL } = require("../../utils/s3Bucket");
 
 
 const getCart = async (req, res, next) => {
@@ -16,7 +16,7 @@ const getCart = async (req, res, next) => {
 
     const updatedProducts = cart.items.map(async (item) => {
       if (item.product.images) {
-        const imagePromises = item.product.images.map(getObjectURL);
+        const imagePromises = item.product.images.map(getObjectPublicURL);
         item.product.images = await Promise.all(imagePromises);
       }
       return item.product.product;
@@ -36,7 +36,10 @@ const getCart = async (req, res, next) => {
       };
     });
 
-    res.status(200).json({ success: true, data: resProductData });
+    res.status(200).json({ success: true, data: {
+      items: resProductData,
+      customItems: cart.customItems
+    } });
   } catch (error) {
     next(error);
   }
