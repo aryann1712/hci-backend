@@ -7,6 +7,7 @@ const { protect } = require("../middleware/authMiddleware");
 const { zodValidate } = require("../middleware/zodValidate");
 const { addToCartSchema, removeFromCartSchema } = require("../validators/cartValidators");
 const addCustomCoilToCart = require("../controllers/cartController/addCustomCoilToCart");
+const removeCustomCoilFromCart = require("../controllers/cartController/removeCustomCoilFromCart");
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.post("/add", addToCart);
 router.post("/addCustomCoil", addCustomCoilToCart);
 router.get("/:id", getCart);
 router.delete("/:productId", removeFromCart);
+router.post("/deleteCustomCoil", removeCustomCoilFromCart);
 router.put("/reduce/:productId", reduceProductQuantity);
 
 module.exports = router;
