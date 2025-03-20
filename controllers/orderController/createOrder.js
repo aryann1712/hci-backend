@@ -10,7 +10,7 @@ const createOrder = async (req, res, next) => {
     const { nanoid } = await import('nanoid'); // Dynamic Import
     // const userId = req.user.userId;
     const userId = req.body.user;
-    const { items, status } = req.body;
+    const { items, customItems, status } = req.body;
 
     const orderId = `ORD-${nanoid()}`;
 
@@ -23,7 +23,26 @@ const createOrder = async (req, res, next) => {
         quantity: i.quantity || 1,
         price: i.price || 0,
       })),
+      customItems: customItems.map((i) => ({
+        coilType: i.coilType || '',
+        height: i.height || '',
+        length: i.length || '',
+        rows: i.rows || '',
+        fpi: i.fpi || '',
+        endplateType: i.endplateType || '',
+        circuitType: i.circuitType || '',
+        numberOfCircuits: i.numberOfCircuits || '',
+        headerSize: i.headerSize || '',
+        tubeType: i.tubeType || '',
+        finType: i.finType || '',
+        distributorHoles: i.distributorHoles || '',
+        distributorHolesDontKnow: i.distributorHolesDontKnow || false,
+        inletConnection: i.inletConnection || '',
+        inletConnectionDontKnow: i.inletConnectionDontKnow || false,
+        quantity: i.quantity || 1,
+      }))
     }], { session });
+    
 
 
 
