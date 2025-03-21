@@ -1,7 +1,7 @@
 const Order = require("../../models/orderModel");
-const sendEmail = require("../../utils/nodeMailer")
+const sendEmail = require("../../utils/nodeMailer");
 const Cart = require("../../models/cartModel");
-
+const Product = require("../../models/productModel"); // Add this to fetch product names
 
 const createOrder = async (req, res, next) => {
   const session = await Order.startSession();
@@ -11,7 +11,6 @@ const createOrder = async (req, res, next) => {
     // const userId = req.user.userId;
     const userId = req.body.user;
     const { items, customItems, status } = req.body;
-
     const orderId = `ORD-${nanoid()}`;
 
     const newOrder = await Order.create([{
@@ -42,46 +41,84 @@ const createOrder = async (req, res, next) => {
         quantity: i.quantity || 1,
       }))
     }], { session });
-    
-
-
 
     if (!newOrder) {
       return res.status(500).json({ error: "Failed to create Order" });
     }
 
-
-
-    //now delete the cart with 
+    // Delete the cart
     await Cart.deleteMany({ user: userId }, { session });
 
+    // Fetch product names for regular items
+    const productIds = items.map(item => item.product);
+    const products = await Product.find({ _id: { $in: productIds } }, { name: 1, _id: 1 });
 
-    // // Send email with credentials
-    // try {
-    //   const mailOptions = {
-    //     from: "hci@gmail.com",
-    //     to: email,
-    //     subject: "User Registration Details",
-    //     text: `
-    //         Hi ${companyName},
+    // Create a map of product IDs to names for easy lookup
+    const productMap = {};
+    products.forEach(product => {
+      productMap[product._id.toString()] = product.name;
+    });
 
-    //         Thank you for registering with us. Here are your credentials to login:
+    // Prepare email content with product details
+    let emailContent = `
+Hi,
 
-    //         Your password: ${password}
+New order (${orderId}) has been placed.
 
-    //         Regards,
-    //         ${process.env.COMPANY_NAME}
-    //         `,
-    //   };
-    //   await sendEmail(mailOptions);
-    // } catch (error) {
-    //   console.log(error);
-    //   return res.status(500).json({ error: "Failed to send email" });
-    // }
+`;
+
+    // Add regular items to the email
+    if (items && items.length > 0) {
+      emailContent += `
+Regular Items:
+${items.map(item => `- ${productMap[item.product.toString()] || 'Unknown Product'}: ${item.quantity} unit(s)`).join('\n')}
+
+`;
+    }
+
+    // Add custom coils to the email
+    if (customItems && customItems.length > 0) {
+      emailContent += `
+Custom Coils:
+${customItems.map((item, index) => `
+Custom Coil #${index + 1} (Quantity: ${item.quantity})
+- Coil Type: ${item.coilType || 'Not specified'}
+- Dimensions: ${item.height || 'N/A'} × ${item.length || 'N/A'}
+- Rows: ${item.rows || 'N/A'}
+- FPI: ${item.fpi || 'N/A'}
+- Endplate Type: ${item.endplateType || 'N/A'}
+- Circuit Type: ${item.circuitType || 'N/A'}
+- Number of Circuits: ${item.numberOfCircuits || 'N/A'}
+- Header Size: ${item.headerSize || 'N/A'}
+- Tube Type: ${item.tubeType || 'N/A'}
+- Fin Type: ${item.finType || 'N/A'}
+- Distributor Holes: ${item.distributorHolesDontKnow ? 'Not specified' : (item.distributorHoles || 'N/A')}
+- Inlet Connection: ${item.inletConnectionDontKnow ? 'Not specified' : (item.inletConnection || 'N/A')}
+`).join('\n')}
+`;
+    }
+
+    emailContent += `
+Regards,
+${process.env.COMPANY_NAME}
+`;
+
+    // Send email with product details
+    try {
+      const mailOptions = {
+        from: process.env.SENDER_MAIL,
+        to: process.env.ADMIN_MAIL,
+        subject: `New order placed: ${orderId}`,
+        text: emailContent,
+      };
+      await sendEmail(mailOptions);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Failed to send email" });
+    }
 
     await session.commitTransaction();
     session.endSession();
-
     res.status(201).json({ success: true, data: newOrder });
   } catch (error) {
     await session.abortTransaction();

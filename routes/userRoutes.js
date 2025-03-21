@@ -10,6 +10,7 @@ const { zodValidate } = require("../middleware/zodValidate");
 const { signUpSchema, signInSchema, updateUserProfileSchema,
     changePasswordSchema, forgotPasswordSchema } = require("../validators/userValidators");
 const getGSTInfo = require("../controllers/userController/getGstInfo");
+const sendRequestToAdmin = require("../controllers/userController/sendRequestToAdmin");
 
 const router = express.Router();
 
@@ -28,7 +29,10 @@ router.put("/cp", changePassword);
 // router.put("/fp", protect, zodValidate(forgotPasswordSchema), changePassword);
 router.put("/fp", forgotPassword);
 
-router.get("/getGSTinfo/:gstNumber", getGSTInfo)
+router.get("/getGSTinfo/:gstNumber", getGSTInfo);
+
+
+router.post("/sendRequestToAdmin", sendRequestToAdmin);
 
 
 module.exports = router;

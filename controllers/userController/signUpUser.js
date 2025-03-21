@@ -34,7 +34,7 @@ const signUpUser = async (req, res, next) => {
     // Send email with credentials
     try {
       const mailOptions = {
-        from: "hci@gmail.com",
+        from: process.env.SENDER_MAIL,
         to: email,
         subject: "User Registration Details",
         text: `
