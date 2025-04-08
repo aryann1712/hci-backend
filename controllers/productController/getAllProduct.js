@@ -6,7 +6,7 @@ const { getObjectPublicURL } = require("../../utils/s3Bucket");
 const getAllProducts = async (req, res, next) => {
   try {
     const { category, search } = req.query;
-    const query = {};
+    const query = { show: true };
 
     if (category) {
       // Find products that have the specified category in their categories array

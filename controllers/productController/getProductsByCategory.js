@@ -20,9 +20,10 @@ const getProductsByCategory = async (req, res, next) => {
 
         // Find products that have the specified category in their categories array
         const products = await Product.find({
-            categories: categoryName
-        }).sort({ createdAt: -1 });
-
+            categories: categoryName,
+            show: true
+          }).sort({ createdAt: -1 });
+          
         const updatedProducts = [];
 
         // Process images for each product

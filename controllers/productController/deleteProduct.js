@@ -23,7 +23,8 @@ const deleteProduct = async (req, res, next) => {
 
   try {
     const { productId } = req.params;
-    const deleted = await Product.findByIdAndDelete(productId, { session });
+    // const deleted = await Product.findByIdAndDelete(productId, { session });
+    const deleted = await Product.findByIdAndUpdate(productId, { $set: { show: false } }, { session });
     if (!deleted) {
       await session.abortTransaction();
       session.endSession();

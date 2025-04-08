@@ -30,14 +30,14 @@ const getProductsByMultipleCategories = async (req, res, next) => {
         }
 
         // Build the query based on match type
-        let query = {};
+        let query = {}; // Default query to show only products that are visible
 
         if (matchAll === 'true') {
             // Match ALL categories (products that have all the specified categories)
-            query = { categories: { $all: categoryList } };
+            query = { categories: { $all: categoryList } , show: true};
         } else {
             // Match ANY categories (products that have any of the specified categories)
-            query = { categories: { $in: categoryList } };
+            query = { categories: { $in: categoryList }, show: true };
         }
 
         const products = await Product.find(query).sort({ createdAt: -1 });

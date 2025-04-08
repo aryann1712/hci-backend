@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema(
     description: { type: String },
     images: [{ type: String }],
     price: { type: Number, default: 0 },
+    show: { type: Boolean, default: true },
     sku: { type: String, unique: true },
   },
   { timestamps: true }
