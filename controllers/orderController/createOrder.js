@@ -3,15 +3,58 @@ const sendEmail = require("../../utils/nodeMailer");
 const Cart = require("../../models/cartModel");
 const Product = require("../../models/productModel"); // Add this to fetch product names
 
+
+// Helper function to get financial year
+const getFinancialYear = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1; // JavaScript months are 0-indexed
+  
+  // Financial year format: YY-YY (e.g., 25-26)
+  // If current month is January to March, it's previous year to current year
+  // If current month is April to December, it's current year to next year
+  if (month <= 3) { // January to March
+    return `${(year-1).toString().slice(-2)}-${year.toString().slice(-2)}`;
+  } else { // April to December
+    return `${year.toString().slice(-2)}-${(year+1).toString().slice(-2)}`;
+  }
+};
+
+// Helper function to generate order ID by finding the last order and incrementing
+const generateOrderId = async () => {
+  const financialYear = getFinancialYear();
+  const orderPrefix = `HCI/${financialYear}/ORD-`;
+  
+  // Find the latest order with the current financial year prefix
+  const latestOrder = await Order.findOne({
+    orderId: { $regex: `^${orderPrefix}` }
+  }).sort({ orderId: -1 });
+  
+  let sequenceNumber = 1; // Default starting number
+  
+  // If an order already exists for this financial year, extract and increment the number
+  if (latestOrder) {
+    const lastOrderId = latestOrder.orderId;
+    const lastSequenceNumber = parseInt(lastOrderId.split('-').pop(), 10);
+    sequenceNumber = lastSequenceNumber + 1;
+  }
+  
+  // Format the sequence number with leading zeros
+  const formattedNumber = sequenceNumber.toString().padStart(3, '0');
+  
+  // Return the formatted order ID
+  return `${orderPrefix}${formattedNumber}`;
+};
+
+
 const createOrder = async (req, res, next) => {
   const session = await Order.startSession();
   session.startTransaction();
   try {
-    const { nanoid } = await import('nanoid'); // Dynamic Import
     // const userId = req.user.userId;
     const userId = req.body.user;
     const { items, customItems, status } = req.body;
-    const orderId = `ORD-${nanoid()}`;
+    const orderId = await generateOrderId();
 
     const newOrder = await Order.create([{
       user: userId,
