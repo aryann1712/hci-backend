@@ -20,6 +20,7 @@ const customCoilItemSchema = new Schema({
   numberOfCircuits: { type: String },
   headerSize: { type: String },
   tubeType: { type: String },
+  pipeType: { type: String },
   finType: { type: String },
   distributorHoles: { type: String },
   distributorHolesDontKnow: { type: Boolean, default: false },

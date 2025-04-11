@@ -16,6 +16,7 @@ const addCustomCoilToCart = async (req, res, next) => {
             numberOfCircuits,
             headerSize,
             tubeType,
+            pipeType,
             finType,
             distributorHoles,
             distributorHolesDontKnow,
@@ -41,6 +42,7 @@ const addCustomCoilToCart = async (req, res, next) => {
             item.numberOfCircuits === numberOfCircuits &&
             item.headerSize === headerSize &&
             item.tubeType === tubeType &&
+            item.pipeType === pipeType &&
             item.finType === finType &&
             item.distributorHoles === distributorHoles &&
             item.inletConnection === inletConnection
@@ -66,6 +68,7 @@ const addCustomCoilToCart = async (req, res, next) => {
                 numberOfCircuits,
                 headerSize,
                 tubeType,
+                pipeType,
                 finType,
                 distributorHoles,
                 distributorHolesDontKnow,

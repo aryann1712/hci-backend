@@ -76,6 +76,7 @@ const createOrder = async (req, res, next) => {
         numberOfCircuits: i.numberOfCircuits || '',
         headerSize: i.headerSize || '',
         tubeType: i.tubeType || '',
+        pipeType: i.pipeType || '',
         finType: i.finType || '',
         distributorHoles: i.distributorHoles || '',
         distributorHolesDontKnow: i.distributorHolesDontKnow || false,

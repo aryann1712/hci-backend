@@ -52,7 +52,6 @@ const createEnquiry = async (req, res, next) => {
     const session = await Enquiry.startSession();
     session.startTransaction();
     try {
-        const { nanoid } = await import('nanoid'); // Dynamic Import
         const userId = req.body.user;
         const { items, customItems, status } = req.body;
         const enquiryId = await generateOrderId();
@@ -77,6 +76,7 @@ const createEnquiry = async (req, res, next) => {
                 numberOfCircuits: i.numberOfCircuits || '',
                 headerSize: i.headerSize || '',
                 tubeType: i.tubeType || '',
+                pipeType: i.pipeType || '',
                 finType: i.finType || '',
                 distributorHoles: i.distributorHoles || '',
                 distributorHolesDontKnow: i.distributorHolesDontKnow || false,
