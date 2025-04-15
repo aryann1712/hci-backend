@@ -16,6 +16,18 @@ const signUpUser = async (req, res, next) => {
       return res.status(400).json({ error: "User already exists." });
     }
 
+    //Check if same Gst number exists
+    if (gstNumber != process.env.ADMIN_GST_NUMBER) {
+      const existingGst = await User.findOne({ gstNumber });
+      if (existingGst) {
+        return res.status(400).json({ error: "User with this same company already exists." });
+      }
+    }
+
+    if(gstNumber.length != 15) {
+      return res.status(400).json({ error: "Invalid GST number." });
+    }
+
     const password = generatePassword();
     // const password = "password";
     const passwordHash = await bcrypt.hash(password, 10);
