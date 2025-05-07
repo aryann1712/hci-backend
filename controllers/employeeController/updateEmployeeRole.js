@@ -14,9 +14,9 @@ const updateEmployeeRole = async (req, res, next) => {
     }
 
     // Validate the role
-    if (role == "admin") {
-      return res.status(400).json({ error: "Invalid role." });
-    }
+    // if (role == "admin") {
+    //   return res.status(400).json({ error: "Invalid role." });
+    // }
 
 
     const updatedUser = await User.findByIdAndUpdate(

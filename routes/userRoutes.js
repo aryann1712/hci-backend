@@ -25,7 +25,7 @@ router.get("/profile/:id", getUserProfile);
 router.put("/profile/:id", updateUserProfile);
 
 // router.put("/cp", protect, zodValidate(changePasswordSchema), changePassword);
-router.put("/cp", changePassword);
+router.post("/cp", changePassword);
 // router.put("/fp", protect, zodValidate(forgotPasswordSchema), changePassword);
 router.put("/fp", forgotPassword);
 
