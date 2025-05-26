@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # HCI Coils Backend API
 
 This repository contains the backend API for the HCI Coils e-commerce platform, built with Node.js, Express, and MongoDB.
@@ -173,3 +174,7 @@ This will update the `swagger-output.json` file with the latest API definitions.
 ## License
 
 [ISC License](LICENSE)
+=======
+# hci-backend
+main
+>>>>>>> e5f221c7cf9aa63d05d044ba15f77919a9139d05
