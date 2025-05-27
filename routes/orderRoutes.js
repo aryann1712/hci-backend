@@ -19,6 +19,6 @@ router.post("/", createOrder);
 router.get("/", protect, adminManagerOnly, getAllOrders);
 router.get("/:orderId", getOrderById);
 router.put("/:orderId", updateOrderStatus);
-router.get("/userid/:id", getAllOrdersByUserId);
+router.get("/userid/:id", protect, getAllOrdersByUserId);
 
 module.exports = router;
