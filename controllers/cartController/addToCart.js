@@ -4,13 +4,15 @@ const Product = require("../../models/productModel");
 
 const addToCart = async (req, res, next) => {
   try {
-    // const userId = req.user.userId;
-    const userId = req.body.user;
-    const { productId, quantity, price } = req.body;
+    const { user, productId, quantity, price } = req.body;
 
-    let cart = await Cart.findOne({ user: userId });
+    if (!user) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    let cart = await Cart.findOne({ user });
     if (!cart) {
-      cart = await Cart.create({ user: userId, items: [], customItems: [] });
+      cart = await Cart.create({ user, items: [], customItems: [] });
     }
 
     // Check if product exists

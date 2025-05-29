@@ -21,17 +21,21 @@ const signInUser = async (req, res, next) => {
       return res.status(401).json({ error: "Status not Active. Contact Owner" });
     } 
 
-    // Create JWT
+    // Create JWT with expiration
     const token = jwt.sign(
-      { userId: user._id.toString(), role: user.role },
+      { 
+        userId: user._id.toString(), 
+        role: user.role 
+      },
       process.env.JWT_SECRET,
+      { expiresIn: '24h' } // Token expires in 24 hours
     );
 
     res.status(200).json({
       success: true,
       email,
       id: user._id,
-      phone : user.phone,
+      phone: user.phone,
       name: user.name,
       role: user.role,
       token,

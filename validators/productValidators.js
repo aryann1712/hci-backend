@@ -1,11 +1,5 @@
 import { z } from "zod";
 
-const dimensionsSchema = z.object({
-  length: z.number().nonnegative().default(0),
-  width: z.number().nonnegative().default(0),
-  height: z.number().nonnegative().default(0)
-});
-
 export const createProductSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   categories: z.array(z.string()).min(1, "At least one category is required"),
@@ -13,9 +7,9 @@ export const createProductSchema = z.object({
   image: z.string().optional(),
   price: z.number().nonnegative().optional(),
   sku: z.string().optional(),
-  dimensions: dimensionsSchema.optional(),
-  sqmm: z.number().nonnegative().default(0)
 });
+
+
 
 export const updateProductSchema = z.object({
   name: z.string().min(1).optional(),
@@ -24,6 +18,4 @@ export const updateProductSchema = z.object({
   image: z.string().optional(),
   price: z.number().nonnegative().optional(),
   sku: z.string().optional(),
-  dimensions: dimensionsSchema.optional(),
-  sqmm: z.number().nonnegative().optional()
 });

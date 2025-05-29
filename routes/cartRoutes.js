@@ -8,20 +8,17 @@ const { zodValidate } = require("../middleware/zodValidate");
 const { addToCartSchema, removeFromCartSchema } = require("../validators/cartValidators");
 const addCustomCoilToCart = require("../controllers/cartController/addCustomCoilToCart");
 const removeCustomCoilFromCart = require("../controllers/cartController/removeCustomCoilFromCart");
+const saveCart = require("../controllers/cartController/saveCart");
 
 const router = express.Router();
 
-// router.post("/add", protect, zodValidate(addToCartSchema), addToCart);
-// router.get("/", protect, getCart);
-// router.delete("/:productId", protect, zodValidate(removeFromCartSchema), removeFromCart);
-// router.put("/reduce/:productId", protect, zodValidate(removeFromCartSchema), reduceProductQuantity);
-
-
-router.post("/add", addToCart);
-router.post("/addCustomCoil", addCustomCoilToCart);
-router.get("/:id", getCart);
-router.delete("/:productId", removeFromCart);
-router.post("/deleteCustomCoil", removeCustomCoilFromCart);
-router.put("/reduce/:productId", reduceProductQuantity);
+// Cart routes with authentication
+router.post("/add", protect, zodValidate(addToCartSchema), addToCart);
+router.post("/addCustomCoil", protect, addCustomCoilToCart);
+router.get("/:id", protect, getCart);  // This route expects the user ID as a parameter
+router.delete("/:productId", protect, zodValidate(removeFromCartSchema), removeFromCart);
+router.post("/deleteCustomCoil", protect, removeCustomCoilFromCart);
+router.put("/reduce/:productId", protect, zodValidate(removeFromCartSchema), reduceProductQuantity);
+router.post("/save", saveCart);
 
 module.exports = router;

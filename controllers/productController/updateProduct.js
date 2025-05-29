@@ -2,6 +2,7 @@
 const Product = require("../../models/productModel");
 const { putObject } = require("../../utils/s3Bucket");
 
+
 const updateProduct = async (req, res, next) => {
   const session = await Product.startSession();
   session.startTransaction();
@@ -10,27 +11,6 @@ const updateProduct = async (req, res, next) => {
     const { productId } = req.params;
     const { name, categories, description, price, sku, existingImages } = req.body;
     const imagesData = req.files;
-    
-    console.log("Request body:", req.body); // Debug log
-    console.log("Raw dimensions from request:", {
-      length: req.body['dimensions[length]'],
-      width: req.body['dimensions[width]'],
-      height: req.body['dimensions[height]']
-    }); // Debug log for raw dimensions
-    
-    // Parse dimensions from form data with proper type conversion
-    const dimensions = {
-      length: parseFloat(req.body['dimensions[length]']) || 0,
-      width: parseFloat(req.body['dimensions[width]']) || 0,
-      height: parseFloat(req.body['dimensions[height]']) || 0
-    };
-    
-    console.log("Parsed dimensions:", dimensions); // Debug log
-    console.log("Dimensions type check:", {
-      length: typeof dimensions.length,
-      width: typeof dimensions.width,
-      height: typeof dimensions.height
-    }); // Debug log for type checking
     
     // Find the product to update
     const product = await Product.findById(productId);
@@ -110,18 +90,12 @@ const updateProduct = async (req, res, next) => {
       }
     }
     
-    // Update the product with explicit dimensions object
+    // Update the product
     const updateData = {
       name,
       categories: categoriesArray,
       description,
-      price,
-      dimensions: {
-        length: dimensions.length,
-        width: dimensions.width,
-        height: dimensions.height
-      },
-      sqmm: product.sqmm // Keep existing sqmm value
+      price
     };
     
     // Only update SKU if provided
@@ -130,16 +104,11 @@ const updateProduct = async (req, res, next) => {
     // Only update images if there are any
     if (images.length > 0) updateData.images = images;
     
-    console.log("Updating product with data:", updateData); // Debug log
-    console.log("Final dimensions object:", updateData.dimensions); // Debug log for final dimensions
-    
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { $set: updateData },
+      updateData,
       { new: true, session }
     );
-    
-    console.log("Updated product:", updatedProduct); // Debug log for updated product
     
     await session.commitTransaction();
     session.endSession();
